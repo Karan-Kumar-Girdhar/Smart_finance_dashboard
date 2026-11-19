@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Nexus</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="background-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+    </div>
+
+    <main class="container">
+        <header>
+            <h1>Financial <span class="highlight">Insights</span></h1>
+            <p>Your latest bank statement analysis.</p>
+        </header>
+
+        <section id="dashboard" class="dashboard hidden">
+            <!-- Top Metrics Row -->
+            <div class="top-metrics-grid">
+                <div class="health-score glass-panel">
+                    <h3>Financial Health</h3>
+                    <div class="health-gauge-container">
+                        <div class="health-number" id="health-score-value">--</div>
+                        <div class="health-status" id="health-score-status">Calculating...</div>
+                        <div class="health-breakdown" id="health-breakdown"></div>
+                    </div>
+                </div>
+
+                <div class="savings-score glass-panel">
+                    <h3>Savings Score</h3>
+                    <div class="score-content">
+                        <div class="score-item">
+                            <span class="label">Total Income:</span>
+                            <span class="value" id="score-income">₹0.00</span>
+                        </div>
+                        <div class="score-item">
+                            <span class="label">Total Saved:</span>
+                            <span class="value success" id="score-saved">₹0.00</span>
+                        </div>
+                        <div class="score-item highlight-box">
+                            <span class="label">Savings Rate:</span>
+                            <span class="value highlight-text" id="score-rate">0%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="top-alerts glass-panel">
+                    <h3>Top Spending Alerts</h3>
+                    <ul class="alerts-list">
+                        <li>
+                            <span class="alert-icon">🔥</span>
+                            <div class="alert-text">
+                                <span class="alert-title">Highest Category</span>
+                                <span class="alert-value" id="alert-category">-</span>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="alert-icon">💎</span>
+                            <div class="alert-text">
+                                <span class="alert-title">Largest Transaction</span>
+                                <span class="alert-value" id="alert-largest">-</span>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="alert-icon">🔄</span>
+                            <div class="alert-text">
+                                <span class="alert-title">Frequent Merchant</span>
+                                <span class="alert-value" id="alert-merchant">-</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Summary Cards -->
+            <div class="summary-cards">
+                <div class="card glass-panel income-card">
+                    <div class="card-icon">↓</div>
+                    <div class="card-content">
+                        <h4>Total Income</h4>
+                        <h2 id="total-income">₹0.00</h2>
+                    </div>
+                </div>
+                <div class="card glass-panel expense-card">
+                    <div class="card-icon">↑</div>
+                    <div class="card-content">
+                        <h4>Total Expenses</h4>
+                        <h2 id="total-expense">₹0.00</h2>
+                    </div>
+                </div>
+                <div class="card glass-panel balance-card">
+                    <div class="card-icon">=</div>
+                    <div class="card-content">
+                        <h4>Net Balance</h4>
+                        <h2 id="net-balance">₹0.00</h2>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Row -->
+            <div class="charts-grid">
+                <div class="glass-panel">
+                    <h3>Monthly Trend</h3>
+                    <div class="chart-container">
+                        <canvas id="trendChart"></canvas>
+                    </div>
+                </div>
+                <div class="glass-panel">
+                    <h3>Expense Breakdown</h3>
+                    <div class="chart-container">
+                        <canvas id="categoryChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Budget Tracker -->
+            <div class="budget-section glass-panel">
+                <div class="budget-header">
+                    <h3>Budget Tracker</h3>
+                    <div class="budget-controls">
+                        <select id="budget-category-select">
+                            <option value="Housing 🏠">Housing 🏠</option>
+                            <option value="Utilities ⚡">Utilities ⚡</option>
+                            <option value="Subscriptions 📅">Subscriptions 📅</option>
+                            <option value="Food 🍔">Food 🍔</option>
+                            <option value="Travel 🚕">Travel 🚕</option>
+                            <option value="Shopping 🛒">Shopping 🛒</option>
+                            <option value="Entertainment 🎮">Entertainment 🎮</option>
+                            <option value="Health 💊">Health 💊</option>
+                            <option value="Services 🛠️">Services 🛠️</option>
+                            <option value="Personal 💅">Personal 💅</option>
+                            <option value="Bills 💡">Bills 💡</option>
+                            <option value="Other 📦">Other 📦</option>
+                        </select>
+                        <input type="number" id="budget-amount-input" placeholder="Budget (₹)">
+                        <button id="set-budget-btn" class="btn primary-btn small-btn">Set</button>
+                    </div>
+                </div>
+                <div id="budget-list" class="budget-list">
+                    <!-- Budget progress bars will be inserted here -->
+                </div>
+            </div>
+
+            <!-- Transactions Table -->
+            <div class="transactions-section glass-panel">
+                <h3>Recent Transactions</h3>
+                <div class="table-container">
+                    <table id="transactions-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Description</th>
+                                <th>Category</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transactions-body">
+                            <!-- Transactions will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 2rem;">
+                <a href="/" class="btn primary-btn" style="text-decoration: none; display: inline-block;">Upload Another File</a>
+            </div>
+
+            <!-- Drill-down Modal -->
+            <div id="drilldown-modal" class="modal hidden">
+                <div class="modal-content glass-panel">
+                    <span id="close-modal" class="close-btn">&times;</span>
+                    <h3 id="modal-title">Category Details</h3>
+                    <div class="table-container modal-table-container">
+                        <table id="modal-transactions-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Description</th>
+                                    <th>Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody id="modal-transactions-body">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
